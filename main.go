@@ -35,14 +35,18 @@ func PerformMiauthAuthentication(sessionID string) (*AccessTokenResponse, error)
 
 	resp, err := http.Post(checkURL, "application/json", nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error making HTTP request: %w", err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected response status: %s", resp.Status)
+	}
 
 	var accessTokenResponse AccessTokenResponse
 	err = json.NewDecoder(resp.Body).Decode(&accessTokenResponse)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error decoding JSON response: %w", err)
 	}
 
 	return &accessTokenResponse, nil
