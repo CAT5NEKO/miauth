@@ -54,11 +54,13 @@ func main() {
 
 	sessionID := miauth.GenerateSessionID()
 	appName := "MyApp"
-	callbackURL := "https://example.pigi/callback"
+	
+	callbackURL := "https://localhost:8000/callback"
 	permission := "write:notes,write:following,read:drive"
 	miauthURL := miauth.ConstructMiauthURL(sessionID, appName, callbackURL, permission)
-	
-	accessTokenResponse, err := miauth.PerformMiauthAuthentication(sessionID)
+
+	//ﾋﾟｷﾞﾓﾝｺﾞをホストにする
+	accessTokenResponse, err := miauth.PerformMiauthAuthentication(sessionID, "pigi.mongo")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
